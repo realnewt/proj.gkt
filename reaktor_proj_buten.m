@@ -11,8 +11,7 @@ FA0=10;  FB0=50; T0=850+273;  % initial number of moles of A, B and P
 R=8.314;    T=T0;       Ea=141e3;
 k=0.0596;  K1=22.90; K2=7.56 ; Ke=2.1e7*exp(-122 /(R*T));           % kinetic par. k @550 K1&K2 bar Ke scale with temp also kJ/mol bar
                      % volume of reactor
-V=0
-g=0;
+V=0;
 T=550+273.15;   A=k/(exp(-Ea/(R*T)));  
 
 
