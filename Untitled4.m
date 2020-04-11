@@ -1,4 +1,5 @@
-%% testdokument för att man ska kunna att testa att ladda upp/ändra och göra om saker i filer
+%% testdokument fÃ¶r att man ska kunna att testa att ladda upp/Ã¤ndra och gÃ¶ra om saker i filer
 
 
 fghfghk    hej
+m
