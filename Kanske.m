@@ -17,7 +17,7 @@ CP=[1.39 0.3847 -1.846e-04 2.895e-08;
     27.14 0.009274 -1.3813e-05 7.645e-09; 
     32.24 0.001924 1.055e-05 -3.596e-09]; %matris med alla CP konstanter J/mol/K
 
-while XA_start-0.95<1e-2
+while XA_start-0.95<1e-3
 [W,Y]=ode15s(@(W,Y)ode_func(W,Y,HR,P,CP,FA0,FB0,FW0),[0 Wtot],[XA_start T0]);
 
 XA=Y(:,1); T=Y(:,2);
@@ -33,9 +33,11 @@ FA0=FA; %mol/s
 FB0=FB;
 FW0=10*FA0;
 e=e+1;
+leg(e,:)= "reaktor "+ e;
 end
-legend('1','2','3','4','5','6','7','8','9')
+legend(leg)
 e
+
 
 
 
