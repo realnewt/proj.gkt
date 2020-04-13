@@ -38,16 +38,11 @@ end
 legend(leg)
 e
 
-
-
-
-
-%%
 figure(1)
 plot(W,XA, 'blue'), hold on
 xlabel('amount catalyst(kg)')
 ylabel('XA')
-
+%% 
 figure(2)
 plot(T,XA, 'blue'), hold on
 xlabel('Temp(K)')
