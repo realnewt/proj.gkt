@@ -24,39 +24,41 @@ a while-loop to determine the amount of reactors needed
 to get the conversion sought after. the loop stops when converison hits a
 specific level (0.95 in this case).
 %}
-[cat,Y]=ode15s(@(cat,Y) ode_func(cat, Y, HR, P, CP, FA0, FB0, FW0), [0 cat_tot], [XA_start T0]);
+[cat,Y]=ode15s(@(cat,Y) ode_func(cat, Y, HR, P, CP, FA0, FB0, FW0), [0 cat_tot], [XA_start T0]); 
+% differential equation solver where ode_func is the differential function
+% at hand and the rest is the parameters and cat & Y matrixes. 
 
 XA=Y(:,1); T=Y(:,2);
 
 figure(1)
-plot(cat,XA, ''), hold on
+plot(cat,XA, ''), hold on               % plot with conversion against catalyst mass.
 xlabel('amount catalyst(kg)')
 ylabel('XA')
 
 figure(2)
-set ( gca, 'xdir', 'reverse' )
-plot(T,XA, ''), hold on
+set ( gca, 'xdir', 'reverse' )            %x axis get set to reverse number order (largest to smallest)
+plot(T,XA, ''), hold on                   %plot with conversion against temperature 
 xlabel('Temp(K)')
 ylabel('XA')
 
-Tslut(e+1)=T(end);
+Tslut(e+1)=T(end);                         %end temperatures of each reactor for future use
 
-XA_start=max(XA);
-FA=(FA0)*(1-XA_start); FB=FB0+FA0*XA_start; 
-FH=FA0*XA_start; FW=FW0;
-Ftot=FA+FB+FH+FW;
-FA0=FA; %mol/s
-FB0=FB;
-FW0=10*FA0;
-e=e+1;
-leg(e,:)= "Reaktor "+ e;
+XA_start=max(XA);                       %set the new start conversion for the new reactor as the end conversion of the reactor in this itteration
+FA=(FA0)*(1-XA_start); FB=FB0+FA0*XA_start; %calculate new flowrates with the new conversion
+FH=FA0*XA_start; FW=FW0;                               %    ------------------    I  I    ----------------------
+Ftot=FA+FB+FH+FW;                                           % total flowrate
+FA0=FA;                                                                 %mol/s. set flowrate out of reactor to flowrate into new reactor
+FB0=FB;                                                                  %  ----------------------------    I   I  ---------------------------
+FW0=10*FA0;                                                         %      --------------------------  I    I       -----------------------
+e=e+1;                                                                     %    counting the number of reactors
+leg(e,:)= "Reaktor "+ e;                                           %    matrix for the legend of the graphs
 
 end
 figure(1)
-legend(leg)
+legend(leg,'location','southeast') %legend with specific placement
 figure(2)
-legend(leg,'location','northwest')
-disp("reaktorer: "+e)
+legend(leg,'location','northeast') % -----------  I  I  ---------------
+disp("reaktorer: "+e)                    % displaying the number of reactors.
 
 
 
