@@ -23,7 +23,7 @@ XA=Y(:,1); T=Y(:,2);
 
 figure(1)
 plot(W,XA, ''), hold on
-xlabel('Mängd katalys (kg)')
+xlabel('Mängd katalysator (kg)')
 ylabel('XA')
 
 figure(2)
