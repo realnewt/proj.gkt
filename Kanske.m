@@ -31,15 +31,15 @@ specific level (0.95 in this case).
 XA=Y(:,1); T=Y(:,2);
 
 figure(1)
-plot(cat,XA, ''), hold on               % plot with conversion against catalyst mass.
-xlabel('amount catalyst(kg)')
-ylabel('XA')
+plot(cat,XA,''), hold on               % plot with conversion against catalyst mass.
+xlabel('Amount of catalyst (kg)')
+ylabel('XA (%)')
 
 figure(2)
 set ( gca, 'xdir', 'reverse' )            %x axis get set to reverse number order (largest to smallest)
-plot(T,XA, ''), hold on                   %plot with conversion against temperature 
-xlabel('Temp(K)')
-ylabel('XA')
+plot(T,XA,''), hold on                   %plot with conversion against temperature 
+xlabel('Temperature (K)')
+ylabel('XA (%)')
 
 Tslut(e+1)=T(end);                         %end temperatures of each reactor for future use
 XA_start=max(XA);  %set the new start conversion for the new reactor as the end conversion of the reactor in this itteration
