@@ -28,7 +28,7 @@ ylabel('XA')
 
 figure(2)
 plot(T,XA, ''), hold on
-xlabel('Temp(K)')
+xlabel('Temperatur(K)')
 ylabel('XA')
 
 XA_start=max(XA);
