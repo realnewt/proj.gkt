@@ -1,4 +1,4 @@
-function dYdW=ode_func(W,Y,HR,P,CP,FA0,FB0,FW0)
+function dYdW=ode_func(cat,Y,HR,P,CP,FA0,FB0,FW0)
 %function file containing differential equations
 
 XA=Y(1); T=Y(2);
