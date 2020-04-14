@@ -8,7 +8,10 @@ K1=22.90; %bar^-1.5
 K2=7.56; %/bar
 Ea=141e3; %J/mol
 
-FA=(FA0)*(1-XA); FB=FB0+FA0*XA; FH=FA0*XA; FW=FW0;
+FA=(FA0);
+FB=FB0;
+FH=FA0;
+FW=FW0;
 Ftot=FA+FB+FH+FW;
 
 PA=FA/Ftot*P; PB=FB/Ftot*P; PH=FH/Ftot*P;
