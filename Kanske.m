@@ -38,7 +38,7 @@ FA0=FA; %mol/s
 FB0=FB;
 FW0=10*FA0;
 e=e+1;
-leg(e,:)= "reaktor "+ e;
+leg(e,:)= "Reaktor "+ e;
 
 end
 figure(1)
