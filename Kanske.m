@@ -31,13 +31,13 @@ specific level (0.95 in this case).
 XA=Y(:,1); T=Y(:,2);
 
 figure(1)
-plot(cat,XA,''), hold on               % plot with conversion against catalyst mass.
+plot(cat,XA,'linewidth',1), hold on               % plot with conversion against catalyst mass.
 xlabel('Amount of catalyst (kg)')
 ylabel('XA (%)')
 
 figure(2)
 set ( gca, 'xdir', 'reverse' )            %x axis get set to reverse number order (largest to smallest)
-plot(T,XA,''), hold on                   %plot with conversion against temperature 
+plot(T,XA,'linewidth',1), hold on                   %plot with conversion against temperature 
 xlabel('Temperature (K)')
 ylabel('XA (%)')
 
