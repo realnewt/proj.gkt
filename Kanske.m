@@ -42,17 +42,9 @@ xlabel('Temp(K)')
 ylabel('XA')
 
 Tslut(e+1)=T(end);                         %end temperatures of each reactor for future use
-
-XA_start=max(XA);                       %set the new start conversion for the new reactor as the end conversion of the reactor in this itteration
-FA=(FA0)*(1-XA_start); FB=FB0+FA0*XA_start; %calculate new flowrates with the new conversion
-FH=FA0*XA_start; FW=FW0;                               %    ------------------    I  I    ----------------------
-Ftot=FA+FB+FH+FW;                                           % total flowrate
-FA0=FA;                                                                 %mol/s. set flowrate out of reactor to flowrate into new reactor
-FB0=FB;                                                                  %  ----------------------------    I   I  ---------------------------
-FW0=10*FA0;                                                         %      --------------------------  I    I       -----------------------
+XA_start=max(XA);  %set the new start conversion for the new reactor as the end conversion of the reactor in this itteration
 e=e+1;                                                                     %    counting the number of reactors
 leg(e,:)= "Reaktor "+ e;                                           %    matrix for the legend of the graphs
-
 end
 figure(1)
 legend(leg,'location','southeast') %legend with specific placement
