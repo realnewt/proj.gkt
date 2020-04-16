@@ -1,4 +1,4 @@
-function dYdW=ode_func(cat,Y,HR,P,CP,FA0,FB0,FW0)
+function dYdW=ode_func(cat,Y,HR,P,CP,FA0,FH0,FB0,FW0)
 %function file containing differential equations
 
 XA=Y(1); T=Y(2);
@@ -8,7 +8,7 @@ K1=22.90; %bar^-1.5
 K2=7.56; %/bar
 Ea=141e3; %J/mol
 
-FA=(FA0)*(1-XA); FB=FB0+FA0*XA; FH=FA0*XA; FW=FW0;
+FA=(FA0)*(1-XA); FB=FB0+FA0*XA; FH=FH0+FA0*XA; FW=FW0;
 Ftot=FA+FB+FH+FW;
 
 PA=FA/Ftot*P; PB=FB/Ftot*P; PH=FH/Ftot*P;

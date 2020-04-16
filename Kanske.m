@@ -3,12 +3,13 @@
 % matlabprogram to determine the number of reactors in the reaction 
 %Butane --> Butene+H2 with assumed amount of katalyst and heating in
 %between the reactors.
-clear, clc, clf, format short
+clear, clc, clf
+format short
 e=0;
 cat_tot=500; %kg cat
 XA_start=0;
 T0=950; %constant start temp. for every reactor in kelvin
-FA0=54; FB0=0.5; FW0=10*FA0; %molar flowrates in to the first reactor mol/s
+FA0=54; FB0=0.5; FW0=10*FA0; FH0=0; %molar flowrates in to the first reactor mol/s
 
 HR=116.3e3; %J/mol reaction enthalpy
 P=1; %bar constant total pressure
@@ -18,13 +19,18 @@ CP=[1.39 0.3847 -1.846e-04 2.895e-08;
     32.24 0.001924 1.055e-05 -3.596e-09]; %matris med alla CP konstanter J/mol/K
     
 Tslut=zeros(1,5); %define a matrix just so matlab doesn't complain
+<<<<<<< Updated upstream
 while XA_start-0.95<1e-4
+=======
+XAut=zeros(1,5);
+while XA_start-0.78<1e-4
+>>>>>>> Stashed changes
 %{
 a while-loop to determine the amount of reactors needed 
 to get the conversion sought after. the loop stops when converison hits a
 specific level (0.95 in this case).
 %}
-[cat,Y]=ode15s(@(cat,Y) ode_func(cat, Y, HR, P, CP, FA0, FB0, FW0), [0 cat_tot], [XA_start T0]); 
+[cat,Y]=ode15s(@(cat,Y) ode_func(cat, Y, HR, P, CP, FA0,FH0, FB0, FW0), [0 cat_tot], [XA_start T0]); 
 % differential equation solver where ode_func is the differential function
 % at hand and the rest is the parameters and cat & Y matrixes. 
 
@@ -41,8 +47,9 @@ plot(T,XA,'linewidth',1), hold on                   %plot with conversion agains
 xlabel('Temperatur (K)')
 ylabel('XA')
 
-Tslut(e+1)=T(end);                         %end temperatures of each reactor for future use
+Tslut(e+1)=T(end);                         %end temperatures of each reactor for future use 
 XA_start=max(XA);  %set the new start conversion for the new reactor as the end conversion of the reactor in this itteration
+XAut(e+1)=XA_start(end); 
 e=e+1;                                                                     %    counting the number of reactors
 leg(e,:)= "Reaktor "+ e;                                           %    matrix for the legend of the graphs
 end
