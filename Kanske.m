@@ -32,14 +32,14 @@ XA=Y(:,1); T=Y(:,2);
 
 figure(1)
 plot(cat,XA,'linewidth',1), hold on               % plot with conversion against catalyst mass.
-xlabel('Amount of catalyst (kg)')
-ylabel('XA (%)')
+xlabel('Mängd katalysator (kg)')
+ylabel('XA')
 
 figure(2)
 set ( gca, 'xdir', 'reverse' )            %x axis get set to reverse number order (largest to smallest)
 plot(T,XA,'linewidth',1), hold on                   %plot with conversion against temperature 
-xlabel('Temperature (K)')
-ylabel('XA (%)')
+xlabel('Temperatur (K)')
+ylabel('XA')
 
 Tslut(e+1)=T(end);                         %end temperatures of each reactor for future use
 XA_start=max(XA);  %set the new start conversion for the new reactor as the end conversion of the reactor in this itteration
