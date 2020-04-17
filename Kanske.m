@@ -19,12 +19,8 @@ CP=[1.39 0.3847 -1.846e-04 2.895e-08;
     32.24 0.001924 1.055e-05 -3.596e-09]; %matris med alla CP konstanter J/mol/K
     
 Tslut=zeros(1,5); %define a matrix just so matlab doesn't complain
-<<<<<<< Updated upstream
-while XA_start-0.95<1e-4
-=======
 XAut=zeros(1,5);
 while XA_start-0.78<1e-4
->>>>>>> Stashed changes
 %{
 a while-loop to determine the amount of reactors needed 
 to get the conversion sought after. the loop stops when converison hits a
