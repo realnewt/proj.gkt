@@ -55,6 +55,8 @@ figure(2)
 legend(leg,'location','northeast') % -----------  I  I  ---------------
 disp("reaktorer: "+e)                    % displaying the number of reactors.
 
+disp('grattis')
+
 
 
 
