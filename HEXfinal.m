@@ -1,17 +1,24 @@
-clc,clear
-M_CO=0.02801;      M_H2=0.00201568;    M_H2O=0.01801528;   M_CH3OH=0.03104;
+clc,clear;
 
-a_CO=30.87;      b_CO=-0.01357;     c_CO=2.789*10^-5;       d_CO=-1.272*10^-8;
-a_H2=27.14;      b_H2=0.009274;     c_H2=-1.381*10^-5;      d_H2=7.645*10^-9;
-av_H2O=72.43;    bv_H2O=0.01039;    cv_H2O=-1.497*10^-6;    dv_H2O=0;  % index v står för vätska
-ag_H2O=32.24;    bg_H2O=0.001924;   cg_H2O=1.055*10^-5;     dg_H2O=-3.596*10^-9;   % index  g står för gas
-av_CH3OH=11.7;   bv_CH3OH=-0.4264;  cv_CH3OH=0.00109;       dv_CH3OH=0;
-ag_CH3OH=21.15;  bg_CH3OH=0.07092;  cg_CH3OH=2.587*10^-5;   dg_CH3OH=-2.852*10^-8;
+% Molmassa för komponenterna
+M=[58.12*10^-3 ;
+   56.1*10^-3 ;
+   2*1.00784*10^-3 ;
+   18.01528*10^-3];                             %Butan-Buten-H2-H2O i kg/mol
+
+%Specifika värmekapaciteterna för komponenterna
+CP=[1.39 0.3847 -1.846e-04 2.895e-08;
+    16.05 0.2804 -1.091e-04 9.098e-09;
+    27.14 0.009274 -1.3813e-05 7.645e-09;
+    32.24 0.001924 1.055e-05 -3.596e-09];       %Butan-Buten-H2-H2O i J/mol/K
 
 %  molflöde  + massa värme växlare 1
-F1_CO=5398.3;             F1_H2=10797;              F1_H20=1799.4;          
-m1_CO=(F1_CO*M_CO)/60;    m1_H2=(F1_H2* M_H2)/60;   m1_H2O=(F1_H20* M_H2O)/60;  
-T0=283;         T0a=400;     T1_medel=(T0+T0a)/2;
+F_mol=[];        
+F_massa=[F_mol(:,1)*M(:,1);
+         F_mol(:,2)*M(:,2);
+         F_mol(:,3)*M(:,3);
+         F_mol(:,3)*M(:,4)];                    %Butan-Buten-H2-H2O i kg/s  
+T0=898;         T0a=950;     T1_medel=(T0+T0a)/2;
 Cp1_CO=Cp(T1_medel,a_CO,b_CO,c_CO,d_CO,M_CO);
 Cp1_H2=Cp(T1_medel,a_H2,b_H2,c_H2,d_H2,M_H2);
 
