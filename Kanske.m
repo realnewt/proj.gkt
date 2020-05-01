@@ -43,10 +43,14 @@ plot(T,XA,'linewidth',1), hold on                   %plot with conversion agains
 xlabel('Temperatur (K)')
 ylabel('XA')
 
-Tslut(e+1)=T(end);                         %end temperatures of each reactor for future use 
+Tslut(e+1)=T(end); %end temperatures of each reactor for future use 
 XA_start=max(XA);  %set the new start conversion for the new reactor as the end conversion of the reactor in this itteration
+fa=(FA0)*(1-XA_start);
+fb=FB0+FA0*XA_start; fh=FH0+FA0*XA_start; fw=FW0;
+ftot=fa+fb+fh+fw;
 XAut(e+1)=XA_start(end); 
-e=e+1;                                                                     %    counting the number of reactors
+e=e+1;                  %    counting the number of reactors
+ff(e,:)=[fa fb fh fw];
 leg(e,:)= "Reaktor "+ e;                                           %    matrix for the legend of the graphs
 end
 figure(1)
