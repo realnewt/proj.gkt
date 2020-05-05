@@ -31,10 +31,15 @@ F_massa=(F_mol(:,1).*M(:,1));                                               %But
 %Temp för flöde 12
 TH_in=936;                  %Initial temp
 J=327;                          %Justerar initil temp (kanske ger litet fel om inte lika med slut temp T)
-I=300;                         %Justerar tillåten area
-l=1000;
+I=200;                         %Justerar tillåten area
+l=10;
 j=936;
 k=0;
+
+m=zeros(l,1);
+n=zeros(l,1);
+o=zeros(l,1);
+
 while TH_in>J && k<l                 %Antal värmeväxlare
 k=k+1;
 while j>J                 %Slut temp (change at start of section)
@@ -86,10 +91,12 @@ TC_ut=TC_in+(TH_in-TH_ut)./C;
 
 TH_in=T;
 j=T;
-h(k)=TC_ut
+m(k)=TC_ut;
+n(k)=TH_in;
+o(k)=A;
 end
-
-
+yay=[n,o]
+sum(o)
 
 %A_fsolve=Area1(Epsilon,C_min,C_max,U)
 
