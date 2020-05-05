@@ -73,22 +73,26 @@ M=[58.12*10^-3 ;
    56.1*10^-3 ;
    2*1.00784*10^-3 ;
    18.01528*10^-3];                             %Butan-Buten-H2-H2O i kg/mol
-
+g=0;
 for i=1:4
+Fun=0.1;
+disp('ny')
+l=0;
+while Fun>=0
     %  molflöde  + massa värme växlare 1
 F_mol=[ff(1,i);
        ff(2,i);
        ff(3,i);
        ff(4,i)];
 F_massa=[ff(1,i)*M(1);
-         ff(2,i)*M(2);
-         ff(3,i)*M(3);
-         ff(4,i)*M(4);];                    %Butan-Buten-H2-H2O i kg/s  
+             ff(2,i)*M(2);
+             ff(3,i)*M(3);
+             ff(4,i)*M(4);];                    %Butan-Buten-H2-H2O i kg/s  
      TCin=Tslut(i); TCut=950;   TCmedel=(TCin+TCut)/2;
-cpBA=@(T)CP(1,1)+CP(1,2).*T+CP(1,3).*T.^2+CP(1,4).*T.^3; cpBA=cpBA(TCmedel);
-cpBE=@(T)CP(2,1)+CP(2,2).*T+CP(2,3).*T.^2+CP(2,4).*T.^3; cpBE=cpBE(TCmedel);
-cpH=@(T)CP(3,1)+CP(3,2).*T+CP(3,3).*T.^2+CP(3,4).*T.^3; cpH=cpH(TCmedel);
-cpW=@(T)CP(4,1)+CP(4,2).*T+CP(4,3).*T.^2+CP(4,4).*T.^3; cpW=cpW(TCmedel);
+cpBA=@(TCmedel)CP(1,1)+CP(1,2).*TCmedel+CP(1,3).*TCmedel.^2+CP(1,4).*TCmedel.^3; cpBA=cpBA(TCmedel);
+cpBE=@(TCmedel)CP(2,1)+CP(2,2).*TCmedel+CP(2,3).*TCmedel.^2+CP(2,4).*TCmedel.^3; cpBE=cpBE(TCmedel);
+cpH=@(TCmedel)CP(3,1)+CP(3,2).*TCmedel+CP(3,3).*TCmedel.^2+CP(3,4).*TCmedel.^3; cpH=cpH(TCmedel);
+cpW=@(TCmedel)CP(4,1)+CP(4,2).*TCmedel+CP(4,3).*TCmedel.^2+CP(4,4).*TCmedel.^3; cpW=cpW(TCmedel);
 
 cp=[cpBA
     cpBE
@@ -106,25 +110,34 @@ bestäm temperaturen för den värmande ångan???
 huur?
 %}
 THin=1100;          
-THut=THin+C*(THin-TCut);           
+THut=THin+C*(THin-TCut);         
 THmedel=(THin+THut)/2;
 
 CC=sum(cp.*F_massa); Cmax=CC;
 Cmin=C*Cmax;    %CH
 %CH=cp(4)*F_massa(4)
 
-
+l=l+1;
 
 Epsilon=Qtot/(Cmin*(THin-TCin));
-Fun=Epsilon-((1-exp(-(U.*i/Cmin)*(1-(Cmin/Cmax))))/(1-(Cmin/Cmax)*exp(-(U.*i/Cmin)*(1-Cmin/Cmax))));
+Fun=Epsilon-((1-exp(-(U.*l/Cmin)*(1-(Cmin/Cmax))))/(1-(Cmin/Cmax)*exp(-(U.*l/Cmin)*(1-Cmin/Cmax))));
 
-A_fsolve=Area1(Epsilon,C_min,C_max,U)
 end
+l
+g=g+l;
+end
+
+%% ugn
+TWut=1000;                                                       %  tempen som kommer ut.
+TWin=100;                                                            %  tempen som går in.
+QW=F_massa(4)*cpW*(TWut-TWin);
+xi=0.8;
+Qheat=xi*QW
+
 
 
 
 %% kompressor
-
 
 R=8.314;              R_CO=R/M_CO;           R_H2=R/M_H2;   R_H2O=R/M_H2O;
 Cv1_CO=Cp1_CO-R_CO;      kappa1_CO=Cp1_CO/Cv1_CO;
