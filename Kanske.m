@@ -144,3 +144,7 @@ P_step = (P_ut/P_in)^(1/3);  %[]
 Tut_is = Tin*P_step^((kappa1-1)/kappa1);  %[K] 
 %Verklig temperatur ut från varje kompressorsteg.
 Tut = Tin + (Tut_is-Tin)/eta_is %[K] 
+
+
+
+%% hallå du
