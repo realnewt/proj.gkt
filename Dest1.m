@@ -1,26 +1,23 @@
-%Binär dest. 
+%Binary dest. of buthene (1) and buthane (2)
 
-P = 760*4; %mmHg
+clear, clc
+
+P = 760; %mmHg
 q = 0;
-zfa = 0.8;   % totaltkonc av A i inflödet
-xfa = 0.8; % konc. av A i vätskeinflödet
+zfa = 0.8;   % totaltkonc av 1 i inflödet
+xfa = 0.8; % konc. av 1 i vätskeinflödet
 xd = 0.99;
 xw = 0.1;
 F = 250;                  %feed
 R = 3;                    %återflödesförhållande
 
 %Wilson parametrar
-W_Ba_Be=[0.48584 1.64637];
+W_Be_Ba=[0.48584 1.64637];
 
 
 %Antoine constants
+A_Be = [15.7564, 2132.42, -33.15]; %Nån av värdena avviker mot Leylas
 A_Ba = [15.5381, 2032.73, -33.15];
-A_Be = [15.7564, 2132.42, -33.15];
-A_H2 = [13.6333, 164.90, 3.19];
-A_H2O = [18.3036, 3816.44, -46.13];
-
-A1 =15.5381 ;  B1 =2032.73 ;  C1 = -33.15;
-A2 = 15.7564;  B2 =2132.42;  C2 =-33.15 ;
 
 % totalbalans + Komponent Ballans för att beräkna strömarnas storlekar
 W =  F*(zfa-xd)/(xw-xd);
@@ -33,7 +30,7 @@ l = L+q*F; % L-streck
 v = V-(1-q)*F; % V-streck
 
 %återkokare
-y0 = 5/3-5/(3+4.5*xw);
+y0 = 5/3-5/(3+4.5*xw);    % Kolla upp senare
 x11 = (v*y0+W*xw)/l;         % KB återkokare
 
 % Avdrivardel   Stegning till feedbotten:
@@ -41,8 +38,8 @@ x(1) = x11;
 i = 1;
 
 while x(i)<xfa
-    i = i+1;
-    y(i) = 5/3-5/(3+4.5*x(i));
+    i = i + 1;
+    y(i) = 5/3-5/(3+4.5*x(i-1)); % Kolla i här
     x(i+1) = (v/l).*y(i)+(W/l)*xw;  % Komponent ballans för avdrivardelen
 end
 
@@ -59,10 +56,9 @@ end
 %Beräkning av temperaturen i återkokaren  (Bubbelpunkt)
 Tstart = 100;
 options = optimset('Display', 'off');
-TK = fsolve(@(T)find_Tb(T, xw, W_Ba_Be(1), W_Ba_Be(2), A1, B1, C1, A2, B2, C3, P), Tstart, options);
+TK = fsolve(@(T)findTbForDest(T, xw, W_Be_Ba, A_Be, A_Ba, P), Tstart, options);
 
 TK = TK + 273.15;
-
 
 % Sammansättning ut ur återkokare
 x1 = y0;              % Komponent A

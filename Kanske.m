@@ -32,9 +32,9 @@ specific level (0.95 in this case).
 % differential equation solver where ode_func is the differential function
 % at hand and the rest is the parameters and cat & Y matrixes. 
 
-XA=Y(:,1); TCmedel=Y(:,2);
+XA=Y(:,1); T=Y(:,2);
 
-%{
+
 figure(1)
 plot(cat,XA,'linewidth',1), hold on               % plot with conversion against catalyst mass.
 xlabel('Mängd katalysator (kg)')
@@ -45,10 +45,10 @@ set ( gca, 'xdir', 'reverse' )            %x axis get set to reverse number orde
 plot(T,XA,'linewidth',1), hold on                   %plot with conversion against temperature 
 xlabel('Temperatur (K)')
 ylabel('XA')
-%} 
 
 
-Tslut(e+1)=TCmedel(end); %end temperatures of each reactor for future use 
+
+Tslut(e+1)=T(end); %end temperatures of each reactor for future use 
 XA_start=max(XA);  %set the new start conversion for the new reactor as the end conversion of the reactor in this itteration
 fa=(FA0)*(1-XA_start);
 fb=FB0+FA0*XA_start; fh=FH0+FA0*XA_start; fw=FW0;
@@ -67,28 +67,32 @@ disp("reaktorer: "+e)                    % displaying the number of reactors.
 %}
 disp('grattis')
 
-%-----------------------------------------------------
+%% potentiell värmeväxlare
 % Molmassa för komponenterna
 M=[58.12*10^-3 ;
    56.1*10^-3 ;
    2*1.00784*10^-3 ;
    18.01528*10^-3];                             %Butan-Buten-H2-H2O i kg/mol
-
+g=0;
 for i=1:4
+Fun=0.1;
+disp('ny')
+l=0;
+while Fun>=0
     %  molflöde  + massa värme växlare 1
 F_mol=[ff(1,i);
        ff(2,i);
        ff(3,i);
        ff(4,i)];
 F_massa=[ff(1,i)*M(1);
-         ff(2,i)*M(2);
-         ff(3,i)*M(3);
-         ff(4,i)*M(4);];                    %Butan-Buten-H2-H2O i kg/s  
+             ff(2,i)*M(2);
+             ff(3,i)*M(3);
+             ff(4,i)*M(4);];                    %Butan-Buten-H2-H2O i kg/s  
      TCin=Tslut(i); TCut=950;   TCmedel=(TCin+TCut)/2;
-cpBA=@(T)CP(1,1)+CP(1,2).*T+CP(1,3).*T.^2+CP(1,4).*T.^3; cpBA=cpBA(TCmedel);
-cpBE=@(T)CP(2,1)+CP(2,2).*T+CP(2,3).*T.^2+CP(2,4).*T.^3; cpBE=cpBE(TCmedel);
-cpH=@(T)CP(3,1)+CP(3,2).*T+CP(3,3).*T.^2+CP(3,4).*T.^3; cpH=cpH(TCmedel);
-cpW=@(T)CP(4,1)+CP(4,2).*T+CP(4,3).*T.^2+CP(4,4).*T.^3; cpW=cpW(TCmedel);
+cpBA=@(TCmedel)CP(1,1)+CP(1,2).*TCmedel+CP(1,3).*TCmedel.^2+CP(1,4).*TCmedel.^3; cpBA=cpBA(TCmedel);
+cpBE=@(TCmedel)CP(2,1)+CP(2,2).*TCmedel+CP(2,3).*TCmedel.^2+CP(2,4).*TCmedel.^3; cpBE=cpBE(TCmedel);
+cpH=@(TCmedel)CP(3,1)+CP(3,2).*TCmedel+CP(3,3).*TCmedel.^2+CP(3,4).*TCmedel.^3; cpH=cpH(TCmedel);
+cpW=@(TCmedel)CP(4,1)+CP(4,2).*TCmedel+CP(4,3).*TCmedel.^2+CP(4,4).*TCmedel.^3; cpW=cpW(TCmedel);
 
 cp=[cpBA
     cpBE
@@ -106,45 +110,53 @@ bestäm temperaturen för den värmande ångan???
 huur?
 %}
 THin=1100;          
-THut=THin+C*(THin-TCut);           
+THut=THin+C*(THin-TCut);         
 THmedel=(THin+THut)/2;
 
 CC=sum(cp.*F_massa); Cmax=CC;
 Cmin=C*Cmax;    %CH
 %CH=cp(4)*F_massa(4)
 
-
+l=l+1;
 
 Epsilon=Qtot/(Cmin*(THin-TCin));
-Fun=Epsilon-((1-exp(-(U.*i/Cmin)*(1-(Cmin/Cmax))))/(1-(Cmin/Cmax)*exp(-(U.*i/Cmin)*(1-Cmin/Cmax))));
+Fun=Epsilon-((1-exp(-(U.*l/Cmin)*(1-(Cmin/Cmax))))/(1-(Cmin/Cmax)*exp(-(U.*l/Cmin)*(1-Cmin/Cmax))));
 
-A_fsolve=Area1(Epsilon,C_min,C_max,U)
 end
+l
+g=g+l;
+end % känns rätt såhär men lär vara fel.
 
+%% ugn
+clc
+for i=1:4
+  M=[58.12*10^-3 ;
+   56.1*10^-3 ;
+   2*1.00784*10^-3 ;
+   18.01528*10^-3];
 
+F_massa=[ff(1,i)*M(1);
+             ff(2,i)*M(2);
+             ff(3,i)*M(3);
+             ff(4,i)*M(4);];
+         
+Tin=Tslut(i); Tut=950; Tmedel=(Tin+Tut)/2;
+cpBA=@(Tmedel)CP(1,1)+CP(1,2).*Tmedel+CP(1,3).*Tmedel.^2+CP(1,4).*Tmedel.^3; cpBA=cpBA(Tmedel);
+cpBE=@(Tmedel)CP(2,1)+CP(2,2).*Tmedel+CP(2,3).*Tmedel.^2+CP(2,4).*Tmedel.^3; cpBE=cpBE(Tmedel);
+cpH=@(Tmedel)CP(3,1)+CP(3,2).*Tmedel+CP(3,3).*Tmedel.^2+CP(3,4).*Tmedel.^3; cpH=cpH(Tmedel);
+cpW=@(Tmedel)CP(4,1)+CP(4,2).*Tmedel+CP(4,3).*Tmedel.^2+CP(4,4).*Tmedel.^3; cpW=cpW(Tmedel);
 
-%% kompressor
+cp=[cpBA
+    cpBE
+    cpH
+    cpW];
 
-
-R=8.314;              R_CO=R/M_CO;           R_H2=R/M_H2;   R_H2O=R/M_H2O;
-Cv1_CO=Cp1_CO-R_CO;      kappa1_CO=Cp1_CO/Cv1_CO;
-Cv1_H2=Cp1_H2-R_H2;      kappa1_H2=Cp1_H2/Cv1_H2;  
-Cv1_H2O=Cp1g_H2O-R_H2O;      Kappa1_H2O=Cp1g_H2O/Cv1_H2O;  %Vatten är vätska => pump
-kappa1=(kappa1_CO+kappa1_H2+Kappa1_H2O)/3;
-P_in=101325;
-P_ut=101325*100;
-Ctot=m1_CO*Cp1_CO+m1_H2*Cp1_H2+ m1_H2O*Cp1g_H2O;   % C1=Cmin
-
-komp_Area=kompressor(Ctot,kappa1,P_in,TCut,P_ut,0.8)
-
-Tin=400;
-eta_is=0.8;
-P_step = (P_ut/P_in)^(1/3);  %[]
-%Temperatur ut från varje kompressorsteg för isentrop kompression.
-Tut_is = Tin*P_step^((kappa1-1)/kappa1);  %[K] 
-%Verklig temperatur ut från varje kompressorsteg.
-Tut = Tin + (Tut_is-Tin)/eta_is %[K] 
-
-
-
-%% hallå du
+QBA=F_massa(1)*cpBA*(Tut-Tin);
+QBE=F_massa(2)*cpBE*(Tut-Tin);
+QH=F_massa(3)*cpH*(Tut-Tin);
+QW=F_massa(4)*cpW*(Tut-Tin);
+Qtot=QBA+QBE+QH+QW;
+         
+chi=0.8;
+Qheat=chi*Qtot
+end
