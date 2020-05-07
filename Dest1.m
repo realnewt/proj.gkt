@@ -2,10 +2,10 @@
 
 clear, clc
 
-P = 760*4; %mmHg
+P = 760; %mmHg
 q = 0;
-zfa = 0.8;   % totaltkonc av A i inflödet
-xfa = 0.8; % konc. av A i vätskeinflödet
+zfa = 0.8;   % totaltkonc av 1 i inflödet
+xfa = 0.8; % konc. av 1 i vätskeinflödet
 xd = 0.99;
 xw = 0.1;
 F = 250;                  %feed
@@ -19,11 +19,6 @@ W_Be_Ba=[0.48584 1.64637];
 A_Be = [15.7564, 2132.42, -33.15]; %Nån av värdena avviker mot Leylas
 A_Ba = [15.5381, 2032.73, -33.15];
 
-
-%activity coefficients at x1
-gamma1 = exp(-log(x1(i)+W12*x2)+x2.*((W12./(x1(i)+W12*x2))-(W21./(W21*x1(i)+x2))));
-gamma2 = exp(-log(x2+W21*x1(i))-x1(i).*((W12./(x1(i)+W12*x2))-(W21./(W21*x1(i)+x2))));
-
 % totalbalans + Komponent Ballans för att beräkna strömarnas storlekar
 W =  F*(zfa-xd)/(xw-xd);
 D = F - W;
@@ -35,7 +30,7 @@ l = L+q*F; % L-streck
 v = V-(1-q)*F; % V-streck
 
 %återkokare
-y0 = 5/3-5/(3+4.5*xw);
+y0 = 5/3-5/(3+4.5*xw);    % Kolla upp senare
 x11 = (v*y0+W*xw)/l;         % KB återkokare
 
 % Avdrivardel   Stegning till feedbotten:
@@ -43,8 +38,8 @@ x(1) = x11;
 i = 1;
 
 while x(i)<xfa
-    i = i+1;
-    y(i) = 5/3-5/(3+4.5*x(i));
+    i = i + 1;
+    y(i) = 5/3-5/(3+4.5*x(i-1)); % Kolla i här
     x(i+1) = (v/l).*y(i)+(W/l)*xw;  % Komponent ballans för avdrivardelen
 end
 
@@ -61,7 +56,7 @@ end
 %Beräkning av temperaturen i återkokaren  (Bubbelpunkt)
 Tstart = 100;
 options = optimset('Display', 'off');
-TK = fsolve(@(T)find_Tb(T, xw, W_Ba_Be(1), W_Ba_Be(2), A_Be, A_Ba, gamma1, gamma2, P), Tstart, options);
+TK = fsolve(@(T)findTbForDest(T, xw, W_Be_Ba, A_Be, A_Ba, P), Tstart, options);
 
 TK = TK + 273.15;
 
