@@ -1,4 +1,6 @@
-%Binär dest. 
+%Binary dest. of buthene (1) and buthane (2)
+
+clear, clc
 
 P = 760*4; %mmHg
 q = 0;
@@ -10,17 +12,17 @@ F = 250;                  %feed
 R = 3;                    %återflödesförhållande
 
 %Wilson parametrar
-W_Ba_Be=[0.48584 1.64637];
+W_Be_Ba=[0.48584 1.64637];
 
 
 %Antoine constants
+A_Be = [15.7564, 2132.42, -33.15]; %Nån av värdena avviker mot Leylas
 A_Ba = [15.5381, 2032.73, -33.15];
-A_Be = [15.7564, 2132.42, -33.15];
-A_H2 = [13.6333, 164.90, 3.19];
-A_H2O = [18.3036, 3816.44, -46.13];
 
-A1 =15.5381 ;  B1 =2032.73 ;  C1 = -33.15;
-A2 = 15.7564;  B2 =2132.42;  C2 =-33.15 ;
+
+%activity coefficients at x1
+gamma1 = exp(-log(x1(i)+W12*x2)+x2.*((W12./(x1(i)+W12*x2))-(W21./(W21*x1(i)+x2))));
+gamma2 = exp(-log(x2+W21*x1(i))-x1(i).*((W12./(x1(i)+W12*x2))-(W21./(W21*x1(i)+x2))));
 
 % totalbalans + Komponent Ballans för att beräkna strömarnas storlekar
 W =  F*(zfa-xd)/(xw-xd);
@@ -59,10 +61,9 @@ end
 %Beräkning av temperaturen i återkokaren  (Bubbelpunkt)
 Tstart = 100;
 options = optimset('Display', 'off');
-TK = fsolve(@(T)find_Tb(T, xw, W_Ba_Be(1), W_Ba_Be(2), A1, B1, C1, A2, B2, C3, P), Tstart, options);
+TK = fsolve(@(T)find_Tb(T, xw, W_Ba_Be(1), W_Ba_Be(2), A_Be, A_Ba, gamma1, gamma2, P), Tstart, options);
 
 TK = TK + 273.15;
-
 
 % Sammansättning ut ur återkokare
 x1 = y0;              % Komponent A
