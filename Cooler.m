@@ -32,9 +32,9 @@ F_mass=[F_mass(F_mol(1,1),1);
 
 %% Parameters for adjustment of loop
 TH_in=936;      %[K] Initial temperature of mixture
-TH_ut_final=327;      %[K] Temperature after heat final exchange
-A_max=100;      %[m2] Maximum area per heat exchange unit
-A_num_max=20;       %Max number of heat exchange units
+TH_ut_final=323;      %[K] Temperature after heat final exchange
+A_max=350;      %[m2] Maximum area per heat exchange unit
+A_num_max=1000;       %Max number of heat exchange units
 
 %Set up matrices for area calculations
 m=zeros(A_num_max,1);       %Set up matrix for TC_out 
@@ -108,18 +108,20 @@ end
 %% Output of heat exchange loop
 Matrix_results=[r,m,p,A_per_unit];        %Matrix with results
 column_names={'Number','TC_out','TH_out','Area'};        %Label for matrix with results 
+Matrix_results( all(~Matrix_results,2),:)=[];
 Heat_exchange=array2table(Matrix_results,'VariableNames',column_names)      %Matrix with results (labeled)
 
-Area_tot=sum(A_per_unit)        %Total area for heat exchange
+Area_tot=sum(A_per_unit);        %Total area for heat exchange
+Area_tot=sprintf('%.f m2',Area_tot)
 
 %% Cost of heat exchange units
 
 S=A_per_unit(1,1);      %[m2] Area per unit
 S_final=A_per_unit(k,1);        %[m2] Area of final unit
 
-Cost=(k-1)*(a+b*S.^n)+(a+b*S_final.^n)      %[USD $ in 2010]  Total cost of heat exchange units (convert to SEK in 2020)
-
-
+Cost=(k-1)*(a+b*S.^n)+(a+b*S_final.^n);      %[USD $ in 2010]  Total cost of heat exchange units (convert to SEK in 2020)
+Cost=CommaFormat(Cost); 
+Cost=sprintf('$%s',Cost)
 
 
 
