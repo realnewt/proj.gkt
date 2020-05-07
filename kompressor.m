@@ -1,4 +1,5 @@
 clear,clc;
+format shortG
 
 %% Data
 T_in=273.15+400;
@@ -24,7 +25,7 @@ C_tot=sum(C_matrix);        %[W/K] Summan av m*cp för alla komponenter i flödet
 
 Pin=1*10^5;     %[Pa] Ingående tryck till kompressorerna
 Tin=273.15+50;      %[K] Ingående temperatur
-Put=4*10^5;     %[Pa] Utgående tryck
+Put=3*10^5;     %[Pa] Utgående tryck
 eta_is=0.8;     %[] Isentropverkningsgrad
 R=8.314;        %[J/mol*K]
 
@@ -48,7 +49,7 @@ kappa_matrix=[CP_matrix(1,1)/Cv_matrix(1,1);
               CP_matrix(3,1)/Cv_matrix(3,1)];
               %CP_matrix(4,1)/Cv_matrix(4,1)];
           
-kappa=sum(kappa_matrix)./3;
+kappa=sum(kappa_matrix)./3;     %!!!Dividedby number of columns
         
 %% function [Wtot,Qkyltot,Akyltot,Tut]=kompressor(C_tot,kappa,Pin,Tin,Put,eta_is)
 %Tryckökning per steg.
