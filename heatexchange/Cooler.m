@@ -10,7 +10,7 @@ F_mol=[11.5002;
       
 %Area calculations
 C=0.8;      %Temperaturverkningsgrad from kurs PM
-U=50;       %[W/m2] KVärmegenomgångstal from kurs PM
+U=50;       %[W/m2] KVÃ¤rmegenomgÃ¥ngstal from kurs PM
 
 %Cost calculations
 a=32000;        %Cost constant

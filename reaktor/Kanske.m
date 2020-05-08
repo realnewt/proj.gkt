@@ -37,7 +37,7 @@ XA=Y(:,1); T=Y(:,2);
 
 figure(1)
 plot(cat,XA,'linewidth',1), hold on               % plot with conversion against catalyst mass.
-xlabel('Mängd katalysator (kg)')
+xlabel('MÃ¤ngd katalysator (kg)')
 ylabel('XA')
 
 figure(2)
@@ -67,8 +67,8 @@ disp("reaktorer: "+e)                    % displaying the number of reactors.
 %}
 disp('grattis')
 
-%% potentiell värmeväxlare
-% Molmassa för komponenterna
+%% potentiell vÃ¤rmevÃ¤xlare
+% Molmassa fÃ¶r komponenterna
 M=[58.12*10^-3 ;
    56.1*10^-3 ;
    2*1.00784*10^-3 ;
@@ -79,7 +79,7 @@ Fun=0.1;
 disp('ny')
 l=0;
 while Fun>=0
-    %  molflöde  + massa värme växlare 1
+    %  molflÃ¶de  + massa vÃ¤rme vÃ¤xlare 1
 F_mol=[ff(1,i);
        ff(2,i);
        ff(3,i);
@@ -106,7 +106,7 @@ QW=F_massa(4)*cpW*(TCut-TCin);
 Qtot=QBA+QBE+QH+QW;
 
 %{
-bestäm temperaturen för den värmande ångan???
+bestÃ¤m temperaturen fÃ¶r den vÃ¤rmande Ã¥ngan???
 huur?
 %}
 THin=1100;          
@@ -125,7 +125,7 @@ Fun=Epsilon-((1-exp(-(U.*l/Cmin)*(1-(Cmin/Cmax))))/(1-(Cmin/Cmax)*exp(-(U.*l/Cmi
 end
 l
 g=g+l;
-end % känns rätt såhär men lär vara fel.
+end % kÃ¤nns rÃ¤tt sÃ¥hÃ¤r men lÃ¤r vara fel.
 
 %% ugn
 clc
