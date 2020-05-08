@@ -41,11 +41,11 @@ P1sat=@(T)(exp(A1(1)-A1(2)./(T+A1(3))));
 x11=fzero(fun,0.1)
 [T,y1]=find_Tb(P,T,A1,A2,x11)
 
-Fin = [11.5002, 42.4998, 42.4998, 540]; %Molflöden: Buthane|Buthene|Hydrogen|Water
+Fin = [11.5002, 42.4998, 42.4998, 540]; %MolflÃ¶den: Buthane|Buthene|Hydrogen|Water
 Ftot=sum(Fin); 
 z1in=sum(Fin(1:3))/Ftot;
 A=[1 1 Ftot;y1 x11 Ftot*z1in];
-flows=rref(A) %utflöden från den första flashen, vapor översta raden
+flows=rref(A) %utflÃ¶den frÃ¥n den fÃ¶rsta flashen, vapor Ã¶versta raden
 line([z1in z1in],[0 T]); line([x11 y1], [T T]); line([x11 x11], [0 T], 'Linestyle', '--'); line([y1 y1], [0 T], 'Linestyle', '--')
 legend('Liquid phase composition', 'Vapor phase composition')
 %% Flash 2
@@ -57,7 +57,7 @@ x12=fzero(fun,0.2)
 
 Ftot=flows(1,3);
 A2=[1 1 Ftot; y12 x12 y1*Ftot]
-flows2=rref(A2) %utflöden från den andra flashen, vapor först
+flows2=rref(A2) %utflÃ¶den frÃ¥n den andra flashen, vapor fÃ¶rst
 
 line([y1 y1],[0 T2]); line([x12 y12], [T2 T2]); line([x12 x12], [0 T2], 'Linestyle', '--'); line([y12 y12], [0 T2], 'Linestyle', '--')
 %% Flash 3
@@ -69,10 +69,10 @@ x13=fzero(fun,0.4)
 
 Ftot=flows2(1,3);
 A3=[1 1 Ftot; y13 x13 y12*Ftot]
-flows3=rref(A3) %utflöden från den tredje flashen vapor först
+flows3=rref(A3) %utflÃ¶den frÃ¥n den tredje flashen vapor fÃ¶rst
 
 line([y12 y12],[0 T3]); line([x13 y13], [T3 T3]); line([x13 x13], [0 T3], 'Linestyle', '--'); line([y13 y13], [0 T3], 'Linestyle', '--')
 legend('Liquid phase composition', 'Vapor phase composition')
 
-butout3=y13*flows3(1,3) %slutgiltiga utflödet av butan som är att jämför med
-butin1=sum(Fin(1:3)) %inflödet av butan till första flashen
+butout3=y13*flows3(1,3) %slutgiltiga utflÃ¶det av butan som Ã¤r att jÃ¤mfÃ¶r med
+butin1=sum(Fin(1:3)) %inflÃ¶det av butan till fÃ¶rsta flashen
