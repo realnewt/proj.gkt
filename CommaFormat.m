@@ -21,3 +21,8 @@ function [commaFormattedString] = CommaFormat(value)
 		WarnUser(errorMessage);
 	end
 	return;
+<<<<<<< Updated upstream
+=======
+    
+    
+>>>>>>> Stashed changes

@@ -1,110 +1,124 @@
 clear,clc;
 format shortG
 
-%%Konstanter
-% Molmassa för komponenterna
-M=[58.12*10^-3;
-   56.1*10^-3;
-   2*1.00784*10^-3;
-   18.01528*10^-3];                                                         %Butan-Buten-H2-H2O i kg/mol
-
-%Specifika värmekapaciteterna för komponenterna
-CP=[1.39 0.3847 -1.846e-04 2.895e-08;
-    16.05 0.2804 -1.091e-04 9.098e-09;
-    27.14 0.009274 -1.3813e-05 7.645e-09;
-    32.24 0.001924 1.055e-05 -3.596e-09];                                   %Butan-Buten-H2-H2O i J/mol/K
-
-C=0.8;                                                                      %Temperaturverkningsgrad fås från kurs PM
-U=50;                                                                       %Värmegenomgångstal från kurs PM för gas nära atmosförtryck i W/m2K
-%%Värmeväxling flöde 12
-%molflöde för flöde 12 (varmt)
+%% Data
+%Molar flow
 F_mol=[11.5002;
        42.9998;
        42.4998;
-       540.0000];                                                           %Butan-Buten-H2-H2O i mol/s
+       540.0000];       %[mol/s] Butane-Butene-H2-H2O
+      
+%Area calculations
+C=0.8;      %Temperaturverkningsgrad from kurs PM
+U=50;       %[W/m2] KVärmegenomgångstal from kurs PM
 
-%Butan-Buten-H2-H2O i kg/s       
-F_massa=(F_mol(:,1).*M(:,1));                                               %Butan-Buten-H2-H2O i kg/s 
-    
-%function A=Please(Ji,j,k,l,J,I)
-%%Kod för att beräkna area av värmeväxlare
-%Temp för flöde 12
-TH_in=936;                  %Initial temp
-J=327;                          %Justerar initil temp (kanske ger litet fel om inte lika med slut temp T)
-I=650;                         %Justerar tillåten area
-l=5;
-j=936;
-k=0;
+%Cost calculations
+a=32000;        %Cost constant
+b=70;       %Cost constant
+n=1.2;      %Equipment constant
 
-m=zeros(l,1);
-p=zeros(l,1);
-o=zeros(l,1);
+%% Fetching and converting molar flow to mass flow
+%Molar flow
+F_mol=[11.5002;
+       42.9998;
+       42.4998;
+       540.0000];       %[mol/s] Butane-Butene-H2-H2O  
 
-while TH_in>J && k<l                 %Antal värmeväxlare
+%Mass flow 
+F_mass=[F_mass(F_mol(1,1),1);
+        F_mass(F_mol(2,1),2);
+        F_mass(F_mol(3,1),3);
+        F_mass(F_mol(4,1),4)];      %[kg/s] Butane-Butene-H2-H2O
+
+%% Parameters for adjustment of loop
+TH_in=936;      %[K] Initial temperature of mixture
+TH_ut_final=327;      %[K] Temperature after heat final exchange
+A_max=100;      %[m2] Maximum area per heat exchange unit
+A_num_max=20;       %Max number of heat exchange units
+
+%Set up matrices for area calculations
+m=zeros(A_num_max,1);       %Set up matrix for TC_out 
+p=zeros(A_num_max,1);       %Set up matrix for TH_out
+A_per_unit=zeros(A_num_max,1);       %Set up matrix for area per heat exchange unit
+r=zeros(A_num_max,1);       %Set up matrix for number of heat exchange units
+
+j=936;      %Adjustment factor for TC_in
+k=0;        %Adjustment factor for number of heat exchange units
+
+%% Loop calculating number of heat exchange units and area of units
+while TH_in>TH_ut_final && k<A_num_max        %While loop that counts number or heat exchange units
 k=k+1;
-while j>J                 %Slut temp (change at start of section)
-    j=j-0.1;                %justera finhet för noggranare svar
+    while j>TH_ut_final       %While loop that iterates TC_in
+    j=j-0.1;        %adjust for finer accuracy 
     
-i=0;
-while i<I               %Max area of värmeväxlare
-    i=i+0.1;                %justera finhet för noggranare svar    
+    i=0;
+        while i<A_max       %While loop that tests area of each heat exchange unit
+        i=i+0.1;        %adjust for finer accuracy    
+        
+        %Cp calculations mixture
+        TH_ut=j;        %Outlet temperature
+        TH_medel=(TH_in+TH_ut)/2;       
 
-TH_ut=j;                    %Slut temp
-TH_medel=(TH_in+TH_ut)/2;                                                   %Temp i Kelvin
-%Cp för componenter i flöde 12
+        CP_matrix=[Cp_new(TH_medel,1,1,1,1,1);
+                   Cp_new(TH_medel,2,2,2,2,2);
+                   Cp_new(TH_medel,3,3,3,3,3);
+                   Cp_new(TH_medel,4,4,4,4,4)];     %[J/Kg*K] Cp each component
+     
+        %Temperature calculation coolant
+        TC_in=273+14;       %Inlet temperature of coolant  
+        TC_ut=TC_in+C*(TH_in-TH_ut);        %Outlet temperature of coolant     
 
-CP_flow_12=[Cp(TH_medel,CP(1,1),CP(1,2),CP(1,3),CP(1,4),M(1));
-            Cp(TH_medel,CP(2,1),CP(2,2),CP(2,3),CP(2,4),M(2));
-            Cp(TH_medel,CP(3,1),CP(3,2),CP(3,3),CP(3,4),M(3));
-            Cp(TH_medel,CP(4,1),CP(4,2),CP(4,3),CP(4,4),M(4))];             %CP for flow 12 i J/Kg*K
+        %Energy transfer calculations
+        q_matrix=F_mass(:,1).*CP_matrix(:,1).*(TH_in-TH_ut);      %Energy transfer matrix
+        q=sum(q_matrix);        %[J/s] Energy transfer
 
-%Cp och temp för kalt flöde (vatten)
-TC_in=273+14;                                                              %TC_ut=1219.3; %från temp för utflöde kallt  
-TC_ut=TC_in+C*(TH_in-TH_ut);                                                %Temp av utflödet av kalt flöde i K    
-TC_medel=(TC_in+TC_ut)/2;                                                   %Medel temp av utflödet av kalt flöde i K  
-
-%q för värmeväxlare efter flöde 12
-q_matrix=F_massa(:,1).*CP_flow_12(:,1).*(TH_in-TH_ut);                      %Energi för upphettning
-q=sum(q_matrix);                                                            %J/s
-
-%TC_ut_2=TC_in+(TH_in-TH_ut)/C
-C_max_matrix=CP_flow_12.*F_massa;   
-C_max=sum(C_max_matrix);
-C_min=C*C_max;
-
-Epsilon=q/(C_min*(TH_in-TC_in));
-
-Fun=Epsilon-((1-exp(-(U.*i/C_min)*(1-(C_min/C_max))))/(1-(C_min/C_max)*exp(-(U.*i/C_min)*(1-C_min/C_max))));
-if Fun<0
-   break;
-end
-end
-if i>I                    %Area av varje värmevälare (change at start of sektion)
-    break;
-end
-end
+        %C_max/C_min calculations
+        C_max_matrix=CP_matrix.*F_mass;   
+        C_max=sum(C_max_matrix);
+        C_min=C*C_max;
+        
+        %Epsilon calculation
+        Epsilon=q/(C_min*(TH_in-TC_in));        %0 < Epsilon < 1
+        
+        %Function for checking area
+        Fun=Epsilon-((1-exp(-(U.*i/C_min)*(1-(C_min/C_max))))/(1-(C_min/C_max)*exp(-(U.*i/C_min)*(1-C_min/C_max))));
+        
+            if Fun<0        %Checks to see if area is correct
+                break;
+            end
+        end
+            if i>A_max      %Checks if max area is exceeded 
+                break;
+            end
+    end
 A=i;
 T=j;
 
-%Temp för utflöde kallt
+%Outlet temperature for coolant 
 TC_ut=TC_in+(TH_in-TH_ut)./C;
 
 TH_in=T;
 j=T;
 m(k)=TC_ut;
 p(k)=TH_in;
-o(k)=A;
+A_per_unit(k)=A;
+r(k)=k;
 end
-yay=[p,o]
-Area_tot=sum(o)
 
-a=32000;
-b=70;
-n=1.2;
-S=I;
-S_final=o(k,1);
-C=(k-1)*(a+b*S.^n)+(a+b*S_final.^n)
-%A_fsolve=Area1(Epsilon,C_min,C_max,U)
+%% Output of heat exchange loop
+Matrix_results=[r,m,p,A_per_unit];        %Matrix with results
+column_names={'Number','TC_out','TH_out','Area'};        %Label for matrix with results 
+Heat_exchange=array2table(Matrix_results,'VariableNames',column_names)      %Matrix with results (labeled)
+
+Area_tot=sum(A_per_unit)        %Total area for heat exchange
+
+%% Cost of heat exchange units
+
+S=A_per_unit(1,1);      %[m2] Area per unit
+S_final=A_per_unit(k,1);        %[m2] Area of final unit
+
+Cost=(k-1)*(a+b*S.^n)+(a+b*S_final.^n)      %[USD $ in 2010]  Total cost of heat exchange units (convert to SEK in 2020)
+
 
 
 

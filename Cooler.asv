@@ -31,9 +31,17 @@ F_mass=[F_mass(F_mol(1,1),1);
         F_mass(F_mol(4,1),4)];      %[kg/s] Butane-Butene-H2-H2O
 
 %% Parameters for adjustment of loop
+<<<<<<< Updated upstream
 TH_in=936;      %[K] Initial temperature of mixture
 TH_ut_final=323;      %[K] Temperature after heat final exchange
 A_max=350;      %[m2] Maximum area per heat exchange unit
+=======
+for A_please = 10:20
+TH_in=936;      %[K] Initial temperature of mixture
+TH_ut_final=273.15+25.85;      %[K] Temperature after heat final exchange
+
+A_max=A_please;      %[m2] Maximum area per heat exchange unit
+>>>>>>> Stashed changes
 A_num_max=1000;       %Max number of heat exchange units
 
 %Set up matrices for area calculations
@@ -109,20 +117,36 @@ end
 Matrix_results=[r,m,p,A_per_unit];        %Matrix with results
 column_names={'Number','TC_out','TH_out','Area'};        %Label for matrix with results 
 Matrix_results( all(~Matrix_results,2),:)=[];
+<<<<<<< Updated upstream
 Heat_exchange=array2table(Matrix_results,'VariableNames',column_names)      %Matrix with results (labeled)
 
 Area_tot=sum(A_per_unit);        %Total area for heat exchange
 Area_tot=sprintf('%.f m2',Area_tot)
+=======
+Heat_exchange=array2table(Matrix_results,'VariableNames',column_names);      %Matrix with results (labeled)
+
+Area_tot(A_please)=sum(A_per_unit)        %Total area for heat exchange !!!
+%Area_tot=sprintf('%.f m2',Area_tot)
+>>>>>>> Stashed changes
 
 %% Cost of heat exchange units
 
 S=A_per_unit(1,1);      %[m2] Area per unit
 S_final=A_per_unit(k,1);        %[m2] Area of final unit
 
+<<<<<<< Updated upstream
 Cost=(k-1)*(a+b*S.^n)+(a+b*S_final.^n);      %[USD $ in 2010]  Total cost of heat exchange units (convert to SEK in 2020)
 Cost=CommaFormat(Cost); 
 Cost=sprintf('$%s',Cost)
 
+=======
+Cost(A_please)=(k-1)*(a+b*S.^n)+(a+b*S_final.^n)     %!!! %[USD $ in 2010]  Total cost of heat exchange units (convert to SEK in 2020)
+%Cost=CommaFormat(Cost); 
+%Cost=sprintf('$%s',Cost);
+
+%plot(Area_tot,Cost)
+end
+>>>>>>> Stashed changes
 
 
 
