@@ -21,11 +21,11 @@ CP_matrix=[Cp_new(T_in,1,1,1,1,1);
   
 %% Calculations
 C_matrix=F_mass.*CP_matrix;      
-C_tot=sum(C_matrix);        %[W/K] Summan av m*cp för alla komponenter i flödet
+C_tot=sum(C_matrix);        %[W/K] Summan av m*cp fÃ¶r alla komponenter i flÃ¶det
 
-Pin=1*10^5;     %[Pa] Ingående tryck till kompressorerna
-Tin=273.15+50;      %[K] Ingående temperatur
-Put=3*10^5;     %[Pa] Utgående tryck
+Pin=1*10^5;     %[Pa] IngÃ¥ende tryck till kompressorerna
+Tin=273.15+50;      %[K] IngÃ¥ende temperatur
+Put=3*10^5;     %[Pa] UtgÃ¥ende tryck
 eta_is=0.8;     %[] Isentropverkningsgrad
 R=8.314;        %[J/mol*K]
 
@@ -56,13 +56,13 @@ kappa=sum(kappa_matrix)./4;     %!!!Dividedby number of columns
 >>>>>>> Stashed changes
         
 %% function [Wtot,Qkyltot,Akyltot,Tut]=kompressor(C_tot,kappa,Pin,Tin,Put,eta_is)
-%Tryckökning per steg.
+%TryckÃ¶kning per steg.
 P_step = (Put/Pin)^(1/3);  %[]
-%Temperatur ut från varje kompressorsteg för isentrop kompression.
+%Temperatur ut frÃ¥n varje kompressorsteg fÃ¶r isentrop kompression.
 Tut_is = Tin*P_step^((kappa-1)/kappa);  %[K] 
-%Verklig temperatur ut från varje kompressorsteg.
+%Verklig temperatur ut frÃ¥n varje kompressorsteg.
 Tut = Tin + (Tut_is-Tin)/eta_is; %[K] 
-%Erforderlig kompressoreffekt för ett kompressorsteg.
+%Erforderlig kompressoreffekt fÃ¶r ett kompressorsteg.
 W = C_tot*(Tut-Tin); %[W] 
 %Total erforderlig kompressoreffekt (3 steg).
 Wtot = 3*W; %[W] 
@@ -72,23 +72,23 @@ Qkyl = C_tot*(Tut-Tin);%[W]
 Qkyltot = 2*Qkyl; %[W] 
 %Kylvattnets temperatur.
 Tkv = 14+273.15; %[K] 
-%Maximal temperatur som kylvattnet får värmas till
+%Maximal temperatur som kylvattnet fÃ¥r vÃ¤rmas till
 Tkvmax = 20+273.15; %[K] 
 %Logaritmisk medeltemperaturdifferens.
 deltaTlm = ((Tin-Tkv)-(Tut-Tkvmax))/log((Tin-Tkv)/(Tut-Tkvmax)); %[]
-%U-värde för mellankylare (gas-vätska)
+%U-vÃ¤rde fÃ¶r mellankylare (gas-vÃ¤tska)
 Ukyl = 200; %[W/(m2K)] 
-%Värmeväxlararea för 1 mellankylare
+%VÃ¤rmevÃ¤xlararea fÃ¶r 1 mellankylare
 Akyl = Qkyl/(Ukyl*deltaTlm); %[m2] 
-%Total värmeväxlararea för mellankylarna.
+%Total vÃ¤rmevÃ¤xlararea fÃ¶r mellankylarna.
 Akyltot = 2*Akyl; %[m2] 
 %end
 
 %% Utdata
-Wtot        %[W] Totalt effektbehov för kompressionen
+Wtot        %[W] Totalt effektbehov fÃ¶r kompressionen
 Qkyl        %[W] Kylbehov i mellankylare
-Akyltot     %[m2] Total värmeväxlararea för mellankylare
-Tut     %[K] Utgående temperatur
+Akyltot     %[m2] Total vÃ¤rmevÃ¤xlararea fÃ¶r mellankylare
+Tut     %[K] UtgÃ¥ende temperatur
 
 
 
