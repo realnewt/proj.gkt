@@ -13,7 +13,7 @@ function [commaFormattedString] = CommaFormat(value)
 		% Strip off any trailing commas.
 		integerPart=deblank(integerPart(1:(end-1)));
 		% Piece the integer part and fractional part back together again.
-		commaFormattedString = [integerPart(end:-1:1) decimalPart];
+		commaFormattedString = [integerPart(end:-1:1) decimalPart:-2)];
 	catch ME
 		errorMessage = sprintf('Error in function %s() at line %d.\n\nError Message:\n%s', ...
 			ME.stack(1).name, ME.stack(1).line, ME.message);
@@ -21,8 +21,3 @@ function [commaFormattedString] = CommaFormat(value)
 		WarnUser(errorMessage);
 	end
 	return;
-<<<<<<< Updated upstream
-=======
-    
-    
->>>>>>> Stashed changes

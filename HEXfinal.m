@@ -13,10 +13,11 @@ CP=[1.39 0.3847 -1.846e-04 2.895e-08;
     32.24 0.001924 1.055e-05 -3.596e-09];       %Butan-Buten-H2-H2O i J/mol/K
 
 %  molflöde  + massa värme växlare 1
-F_mol=[ff(1,1);
-       ff(2,1);
-       ff(3,1);
-       ff(4,1)];                                %Butan-Buten-H2-H2O i mol/s       
+for i= 1:4....
+F_mol=[ff(1,i);
+       ff(2,i);
+       ff(3,i);
+       ff(4,i)];                                %Butan-Buten-H2-H2O i mol/s       
 F_massa=[F_mol(:,1)*M(:,1);
          F_mol(:,2)*M(:,2);
          F_mol(:,3)*M(:,3);
