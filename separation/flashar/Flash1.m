@@ -43,7 +43,7 @@ fun=@(x1)(find_Tb(P,T,A1,A2,x1)-T); %function to be solved
 x11=fzero(fun,0.1) %solving the function to find the component fraction of the liquid phase
 [T,y1]=find_Tb(P,T,A1,A2,x11) %using the found x-value to calculate the component fraction in the vapour phase
 
-Fin = [11.5002, 42.4998, 42.4998, 540]; %Molflöden: Buthane|Buthene|Hydrogen|Water
+Fin = [11.5002, 42.4998, 42.4998, 540]; %MolflÃ¶den: Buthane|Buthene|Hydrogen|Water
 Ftot=sum(Fin); 
 z1in=sum(Fin(1:3))/Ftot; %defining the inlet component fraction 
 A=[1 1 Ftot;y1 x11 Ftot*z1in]; %assembling the equations to be solved
