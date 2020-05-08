@@ -14,3 +14,4 @@ Cp_initial=[1.39 0.3847 -1.846e-04 2.895e-08;
 
 Cp=(Cp_initial(a,1)+Cp_initial(b,2).*T+Cp_initial(c,3).*T^2+Cp_initial(d,4).*T^3)./M(m,1);   %based on c=(a+b*T+c*T^2+d*T^3)/M;        
 end
+
