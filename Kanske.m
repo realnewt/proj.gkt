@@ -141,10 +141,10 @@ F_massa=[ff(1,i)*M(1);
              ff(4,i)*M(4);];
          
 Tin=Tslut(i); Tut=950; Tmedel=(Tin+Tut)/2;
-cpBA=@(Tmedel)CP(1,1)+CP(1,2).*Tmedel+CP(1,3).*Tmedel.^2+CP(1,4).*Tmedel.^3; cpBA=cpBA(Tmedel);
-cpBE=@(Tmedel)CP(2,1)+CP(2,2).*Tmedel+CP(2,3).*Tmedel.^2+CP(2,4).*Tmedel.^3; cpBE=cpBE(Tmedel);
-cpH=@(Tmedel)CP(3,1)+CP(3,2).*Tmedel+CP(3,3).*Tmedel.^2+CP(3,4).*Tmedel.^3; cpH=cpH(Tmedel);
-cpW=@(Tmedel)CP(4,1)+CP(4,2).*Tmedel+CP(4,3).*Tmedel.^2+CP(4,4).*Tmedel.^3; cpW=cpW(Tmedel);
+cpBA=@(Tmedel)CP(1,1)+CP(1,2).*Tmedel+CP(1,3).*Tmedel.^2+CP(1,4).*Tmedel.^3;       cpBA=cpBA(Tmedel);
+cpBE=@(Tmedel)CP(2,1)+CP(2,2).*Tmedel+CP(2,3).*Tmedel.^2+CP(2,4).*Tmedel.^3;     cpBE=cpBE(Tmedel);
+cpH=@(Tmedel)CP(3,1)+CP(3,2).*Tmedel+CP(3,3).*Tmedel.^2+CP(3,4).*Tmedel.^3;      cpH=cpH(Tmedel);
+cpW=@(Tmedel)CP(4,1)+CP(4,2).*Tmedel+CP(4,3).*Tmedel.^2+CP(4,4).*Tmedel.^3;     cpW=cpW(Tmedel);
 
 cp=[cpBA
     cpBE
@@ -158,5 +158,6 @@ QW=F_massa(4)*cpW*(Tut-Tin);
 Qtot=QBA+QBE+QH+QW;
          
 chi=0.8;
-Qheat=chi*Qtot
+Qheat(i)=chi*Qtot;
 end
+Qtotheating=sum(Qheat)
