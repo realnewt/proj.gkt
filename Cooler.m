@@ -31,9 +31,23 @@ F_mass=[F_mass(F_mol(1,1),1);
         F_mass(F_mol(4,1),4)];      %[kg/s] Butane-Butene-H2-H2O
 
 %% Parameters for adjustment of loop
+Cost=zeros(10,1);
+Area_tot=zeros(10,1);
+%for A_please = 1:5
 TH_in=936;      %[K] Initial temperature of mixture
+<<<<<<< Updated upstream
 TH_ut_final=323;      %[K] Temperature after heat final exchange
 A_max=350;      %[m2] Maximum area per heat exchange unit
+=======
+<<<<<<< Updated upstream
+TH_ut_final=327;      %[K] Temperature after heat final exchange
+A_max=5;      %[m2] Maximum area per heat exchange unit
+=======
+TH_ut_final=273.15+25.85;      %[K] Temperature after heat final exchange
+
+A_max=650;      %[m2] Maximum area per heat exchange unit
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 A_num_max=1000;       %Max number of heat exchange units
 
 %Set up matrices for area calculations
@@ -111,18 +125,41 @@ column_names={'Number','TC_out','TH_out','Area'};        %Label for matrix with 
 Matrix_results( all(~Matrix_results,2),:)=[];
 Heat_exchange=array2table(Matrix_results,'VariableNames',column_names)      %Matrix with results (labeled)
 
+<<<<<<< Updated upstream
 Area_tot=sum(A_per_unit);        %Total area for heat exchange
 Area_tot=sprintf('%.f m2',Area_tot)
+=======
+Area_tot=sum(A_per_unit);        %Total area for heat exchange !!!
+%Area_tot=sprintf('%.f m2',Area_tot)
+>>>>>>> Stashed changes
 
 %% Cost of heat exchange units
 
 S=A_per_unit(1,1);      %[m2] Area per unit
 S_final=A_per_unit(k,1);        %[m2] Area of final unit
 
+<<<<<<< Updated upstream
 Cost=(k-1)*(a+b*S.^n)+(a+b*S_final.^n);      %[USD $ in 2010]  Total cost of heat exchange units (convert to SEK in 2020)
 Cost=CommaFormat(Cost); 
 Cost=sprintf('$%s',Cost)
 
 
+=======
+Cost=(k-1)*(a+b*S.^n)+(a+b*S_final.^n);     %!!! %[USD $ in 2010]  Total cost of heat exchange units (convert to SEK in 2020)
+%Cost=CommaFormat(Cost); 
+%Cost=sprintf('$%s',Cost);
+
+%plot(Area_tot,Cost)
+%end
+
+%Area_tot
+%Cost
+%r;
+%x=linspace(1,5);
+%hold on
+%plot(Area_tot,x)
+%plot(Cost,x)
+%hold off
+>>>>>>> Stashed changes
 
 
