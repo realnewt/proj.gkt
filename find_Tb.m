@@ -1,19 +1,13 @@
-function res = find_Tb(T,x1,A1,A2,P)
+function [T,y1]=find_Tb(P,T0,A1,A2,x1)
+x2=@(x1)(1-x1);
 
-%Use T,x1,gamma1,gamma2,A1,B1,C1,A2,B2,C2,P
-%to calculate y1 and y2
+P1sat=@(T)(exp(A1(1)-A1(2)./(T+A1(3)))); P2sat=@(T)(exp(A2(1)-A2(2)/(T+A2(3))));
 
-x2 =1-x1;
+y1=@(T)(P1sat(T).*x1./P); y2=@(T)(P2sat(T).*x2(x1)./P);
 
-P01 = 10.^(A1(1)-A1(2)./(T+A1(3)));
-P02 = 10.^(A2(1)-A2(2)./(T+A2(3)));
+sumy=@(T)(y1(T)+y2(T)-1);
 
-P1 = P01.*x1;
-P2 = P02.*x2;
-
-y1 = P1./P;
-y2 = P2./P;
-
-res = y1+y2-1;
+T=fsolve(sumy,T0,optimset('Diagnostics','off', 'Display','off'));
+y1=y1(T);
+y2=y2(T);
 end
-
