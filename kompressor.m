@@ -6,18 +6,18 @@ T_in=273.15+400;
 
 F_mol=[11.5002;
        42.9998;
-       42.4998];
+       42.4998
        540.0000];
    
 F_mass=[F_mass(F_mol(1,1),1);
         F_mass(F_mol(2,1),2);
-        F_mass(F_mol(3,1),3)];
+        F_mass(F_mol(3,1),3)
         F_mass(F_mol(4,1),4)];
 
 CP_matrix=[Cp_new(T_in,1,1,1,1,1);
            Cp_new(T_in,2,2,2,2,2);
-           Cp_new(T_in,3,3,3,3,3)];
-           Cp_new(T_in,4,4,4,4,4)]
+           Cp_new(T_in,3,3,3,3,3)
+           Cp_new(T_in,4,4,4,4,4)];
   
 %% Calculations
 C_matrix=F_mass.*CP_matrix;      
@@ -31,29 +31,26 @@ R=8.314;        %[J/mol*K]
 
 M=[58.12*10^-3;
    56.1*10^-3;
-   2*1.00784*10^-3];
+   2*1.00784*10^-3
    18.01528*10^-3];     %Butane-Butene-H2-H2O in kg/mol
 
 R_matrix=[R/M(1,1);
           R/M(2,1);
-          R/M(3,1)];
+          R/M(3,1)
           R/M(4,1)];        %Butane-Butene-H2-H2O
   
 Cv_matrix=[CP_matrix(1,1)-R_matrix(1,1);
            CP_matrix(1,1)-R_matrix(2,1);
-           CP_matrix(1,1)-R_matrix(3,1)];
+           CP_matrix(1,1)-R_matrix(3,1)
            CP_matrix(1,1)-R_matrix(4,1)];       %%Butane-Butene-H2-H2O
        
 kappa_matrix=[CP_matrix(1,1)/Cv_matrix(1,1);
               CP_matrix(2,1)/Cv_matrix(2,1);
-              CP_matrix(3,1)/Cv_matrix(3,1)];
+              CP_matrix(3,1)/Cv_matrix(3,1)
               CP_matrix(4,1)/Cv_matrix(4,1)];
-          
-<<<<<<< Updated upstream
-kappa=sum(kappa_matrix)./3;     %!!!Dividedby number of columns
-=======
+
 kappa=sum(kappa_matrix)./4;     %!!!Dividedby number of columns
->>>>>>> Stashed changes
+
         
 %% function [Wtot,Qkyltot,Akyltot,Tut]=kompressor(C_tot,kappa,Pin,Tin,Put,eta_is)
 %Tryckökning per steg.
