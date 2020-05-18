@@ -13,10 +13,10 @@ Area_tot=zeros(10,1);
 
 % Fetching and converting molar flow to mass flow
 %Molar flow
-F_mol_cooler=[7.5549;
-        27.92;
-        27.92;
-       10.171];       %[mol/s] Butane-Butene-H2-H2O  
+F_mol_cooler=[20;
+        33;
+        33;
+       540];       %[mol/s] Butane-Butene-H2-H2O  
 
 %Mass flow 
 F_mass_cooler=[F_mass(F_mol_cooler(1,1),1);
@@ -44,7 +44,7 @@ k=0;        %Adjustment factor for number of heat exchange units
 while TH_in>TH_ut_final && k<A_num_max        %While loop that counts number or heat exchange units
 k=k+1;
     while j>TH_ut_final       %While loop that iterates TC_in
-    j=j-30;        %adjust for finer accuracy 
+    j=j-10;        %adjust for finer accuracy 
     
     i=0;
         while i<A_max       %While loop that tests area of each heat exchange unit
@@ -103,10 +103,10 @@ end
 Matrix_results=[r,m,p,A_per_unit];        %Matrix with results
 column_names={'Number','TC_out','TH_out','Area'};        %Label for matrix with results 
 Matrix_results( all(~Matrix_results,2),:)=[];
-Heat_exchange=array2table(Matrix_results,'VariableNames',column_names);      %Matrix with results (labeled)
+Heat_exchange=array2table(Matrix_results,'VariableNames',column_names)      %Matrix with results (labeled)
 
 Area_tot=sum(A_per_unit);        %Total area for heat exchange
-Area_tot=sprintf('%.f m2',Area_tot);        %Total area of all heat exchange units
+Area_tot=sprintf('%.f m2',Area_tot)        %Total area of all heat exchange units
 
 %% Compressor       %Run section to get total required effect for compression
 %clear,clc;
@@ -135,7 +135,7 @@ C_tot=sum(C_matrix);        %[W/K] Summan av m*cp för alla komponenter i flödet
 
 P_in=1*10^5;     %[Pa] Ingående tryck till kompressorerna
 T_in=323;      %[K] Ingående temperatur
-P_ut=50*10^5;     %[Pa] Utgående tryck
+P_ut=200*10^5;     %[Pa] Utgående tryck
 eta_is=0.8;     %[] Isentropverkningsgrad
 R=8.314;        %[J/mol*K]
 
@@ -221,14 +221,52 @@ a_s=130;        a_v=210;        a_b=340;
 b_s=440;        b_v=400;        b_b=640;
 n_s=1.8;        n_v=1.9;        n_b=1.9;
 %Calculations
-S_dist=2.5;      %[m] diameter of trays
+%Pressure vesel
+Pi=3.14;
+Density=8000;       %[kg/m^3] from kurs PM at 900 F=755 K (would be better with 950 K, yes?)
+
+D=5;     %[m] diameter of container (1-3.5)
+L=2*D;        %[m] length of container (2*diameter from kurs PM)
+S_max=103.4*10^6;     %[N/m^2]maximalt tillåtna materialspänning 
+E=1;     %svets verkningsgrad (= 1)
+P=1.1*1*10^5;     %konstructionstrycket (10% större än arbetstryck) (Pa)
+
+t=(P*D)/(2*S_max*E-1.2*P);        %[m] Reactor wall thickness 
+
+V_full=Pi*((D/2)^2)*L;      %[m^3]Volume of full tank
+V_inner=Pi*(((D/2)-t)^2)*(L-2*t);     %[m^3] Volume of inner tank (air)
+Volume_container=V_full-V_inner;        %[m^3] Volume of shell
+Shell_mass_dist=Density*Volume_container;        %[kg] Mass of shell (S)
+
+a_v_304=17400;        a_h_304=12800;
+b_v_304=79;        b_h_304=73;
+n_v_304=0.85;        n_h_304=0.85;
+
+%Cost_Year_B_v_k=a_v_k+b_v_k*Shell_mass.^n_v_k;     Cost_Year_B_h_k=a_h_k+b_h_k*Shell_mass.^n_h_k;     
+Cost_Year_B_v_304=a_v_304+b_v_304*Shell_mass_dist.^n_v_304;       Cost_Year_B_h_304=a_h_304+b_h_304*Shell_mass_dist.^n_h_304;     %[$] Cost calculations for different distillation trays
+
+%Cost_Year_A_v_k=Cost_Year_B_v_k*(CEPCI_Year_A/CEPCI_Year_B);        Cost_Year_A_h_k=Cost_Year_B_h_k*(CEPCI_Year_A/CEPCI_Year_B);        
+Cost_Year_A_v_304=Cost_Year_B_v_304*(CEPCI_Year_A/CEPCI_Year_B);        Cost_Year_A_h_304=Cost_Year_B_h_304*(CEPCI_Year_A/CEPCI_Year_B);        %[$] Accounts for inflation
+
+%Cost_Reactor_v_k=Cost_Year_A_v_k*10        %[SEK]
+%Cost_Reactor_h_k=Cost_Year_A_h_k*10        %[SEK]
+Cost_Dist_v_304_single=Cost_Year_A_v_304*10;        %[SEK]
+Cost_Dist_h_304_single=Cost_Year_A_h_304*10;        %[SEK]
+
+Cost_Dist_v_304_five=Cost_Dist_v_304_single*5
+Cost_Dist_h_304_five=Cost_Dist_h_304_single*5;
+
+%Trays
+S_dist=1.103;      %[m] diameter of trays
 Cost_Year_B_s=a_s+b_s*S_dist.^n_s;     Cost_Year_B_v=a_v+b_v*S_dist.^n_v;     Cost_Year_B_b=a_b+b_b*S_dist.^n_b;     %[$] Cost calculations for different distillation trays
 
 Cost_Year_A_s=Cost_Year_B_s*(CEPCI_Year_A/CEPCI_Year_B);        Cost_Year_A_v=Cost_Year_B_v*(CEPCI_Year_A/CEPCI_Year_B);        Cost_Year_A_b=Cost_Year_B_b*(CEPCI_Year_A/CEPCI_Year_B);        %[$] Accounts for inflation
 
-Cost_Distillation_s=Cost_Year_A_s*10;        %[SEK]
-Cost_Distillation_v=Cost_Year_A_v*10;        %[SEK]
-Cost_Distillation_b=Cost_Year_A_b*10;        %[SEK]
+Cost_Distillation_s=Cost_Year_A_s*10*6        %[SEK]
+Cost_Distillation_v=Cost_Year_A_v*10*6;        %[SEK]
+Cost_Distillation_b=Cost_Year_A_b*10*6;        %[SEK]
+
+Cost_Dist=Cost_Dist_v_304_five+Cost_Distillation_s
 
 %% 3. COST: Compressor      (Centrifugal compressor)        %[kW]
 a=580000;
@@ -239,7 +277,7 @@ Cost_Year_B=a+b*S_comp.^n;
 
 Cost_Year_A=Cost_Year_B*(CEPCI_Year_A/CEPCI_Year_B);
 
-Cost_Compressor=Cost_Year_A*10;
+Cost_Compressor=Cost_Year_A*10
 
 %% 4. COST: Reactor (Vertikal, kolstål=_v_k / Horisontell, kolstål=_h_k / Vertikal, 304-ss=_v_304 / Horisontell, 304-ss=_h_304)     %[kg] 
 %Constants
@@ -251,7 +289,7 @@ Pi=3.14;
 Density=8000;       %[kg/m^3] from kurs PM at 900 F=755 K (would be better with 950 K, yes?)
 
 
-D=1;     %[m] diameter of container (1-3.5)
+D=5;     %[m] diameter of container (1-3.5)
 L=2*D;        %[m] length of container (2*diameter from kurs PM)
 S_max=74.5*10^6;     %[N/m^2]maximalt tillåtna materialspänning 
 E=1;     %svets verkningsgrad (= 1)
@@ -289,7 +327,7 @@ Cost_Katalyst_h_304=Cost_Reactor_h_304_five*0.5;
 %Constants: Uses same a, b, n, and CEPCI values as distillation
 
 %Calculations
-S_flash=2.5;      %[m] diameter of tray?
+S_flash=2;      %[m] diameter of tray?
 
 Cost_Year_B_s=a_s+b_s*S_flash.^n_s;     Cost_Year_B_v=a_v+b_v*S_flash.^n_v;     Cost_Year_B_b=a_b+b_b*S_flash.^n_b;     %[$] Cost calculations for different distillation trays
 Cost_Year_A_s=Cost_Year_B_s*(CEPCI_Year_A/CEPCI_Year_B);        Cost_Year_A_v=Cost_Year_B_v*(CEPCI_Year_A/CEPCI_Year_B);        Cost_Year_A_b=Cost_Year_B_b*(CEPCI_Year_A/CEPCI_Year_B);        %[$] Accounts for inflation
@@ -305,8 +343,8 @@ Langfactor=4;
 Cost_Cooler_1=1;        %Parameters set:
 Cost_Cooler_2=1;        %Parameters set:
 
-Cost_Distillation_1=1;      %Parameters set:
-Cost_Distillation_2=1;      %Parameters set:
+Cost_Distillation_1=7540600;      %Water-Butane: Parameters set:
+Cost_Distillation_2=1;      %Butene-Butane: Parameters set:
 
 %Full Cost for 
 Equipment_Cost=Cost_Cooler+Cost_Distillation_s+Cost_Compressor+Cost_Reactor_h_304_five+Cost_Katalyst_h_304;     %Missing flash, two coolers, two distillation 
