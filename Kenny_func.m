@@ -350,4 +350,5 @@ Cost_Distillation_2=1;      %Butene-Butane: Parameters set:
 Equipment_Cost=Cost_Cooler+Cost_Distillation_s+Cost_Compressor+Cost_Reactor_h_304_five+Cost_Katalyst_h_304;     %Missing flash, two coolers, two distillation 
 Cost_set_up=Equipment_Cost*Langfactor
 
-
+%% Total output
+product_flow=(M(1,2)*outflow*(8000*3600))/1000        %in ton/år
